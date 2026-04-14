@@ -1,6 +1,5 @@
 [global]
 system_prompt = """
-test
-testing 2
+You are a helper Bot for Bash! Only responded with a single line of bash. Only bash! No Backticks!
 """
 gemini_api_key = ""

@@ -1,62 +1,54 @@
-use crate::{actions::{StartRequest, StreamResult, StreamType}, config::Settings};
+use crate::{
+    actions::{StartRequest, StreamResult},
+    config::Settings,
+};
+use futures::StreamExt;
+use rig::{
+    agent::MultiTurnStreamItem,
+    client::CompletionClient,
+    providers::gemini,
+    streaming::{StreamedAssistantContent, StreamingPrompt},
+};
 use tokio::sync::mpsc::{UnboundedReceiver, UnboundedSender};
 
-pub fn spawn_worker(settings: &Settings, tx: UnboundedSender<StreamResult>, mut rx: UnboundedReceiver<StartRequest>) {
+pub fn spawn_worker(
+    settings: Settings,
+    _tx: UnboundedSender<StreamResult>,
+    mut rx: UnboundedReceiver<StartRequest>,
+) {
     tokio::spawn(async move {
         tokio::select! {
-        Some(_action) = rx.recv() => {
-                let result = StreamResult {
-                    action_type: StreamType::StreamResult,
-                    result: "Result 1".to_string()
-                };
+            Some(action) = rx.recv() => {
+                let client = gemini::Client::new(&settings.global.gemini_api_key).unwrap();
+                let agent = client.agent("gemini-2.5-flash")
+                    .preamble(&settings.global.system_prompt)
+                    .build();
 
+                let mut response_stream = agent.stream_prompt(&action.prompt).await;
 
-                match tx.send(result) {
-                    Ok(_) => {},
-                    Err(e) => {
-                        println!("err {:?}", e);
-                    }
-                };
-                tokio::time::sleep(std::time::Duration::from_millis(500)).await;
+                while let Some(item) = response_stream.next().await {
+                    match item {
+                        Ok(MultiTurnStreamItem::StreamAssistantItem(StreamedAssistantContent::Text(result))) => {
+                            let _ = _tx.send(StreamResult{
+                                action_type: crate::actions::StreamType::StreamResult,
+                                result: result.to_string(),
+                            });
+                        }
+                        Ok(MultiTurnStreamItem::FinalResponse(response)) => {
+                            let _ = _tx.send(StreamResult{
+                                action_type: crate::actions::StreamType::StreamEnd,
+                                result: response.response().to_string()
+                            });
+                        }
+                        Err(e) => {
+                            eprintln!("Error in stream: {}", e);
+                            break;
+                        }
+                        Ok(_) => {}
+                    };
+                }
 
-                let result = StreamResult {
-                    action_type: StreamType::StreamResult,
-                    result: "Result 2".to_string()
-                };
-
-                match tx.send(result) {
-                    Ok(_) => {},
-                    Err(e) => {
-                        println!("err {:?}", e);
-                    }
-                };
-                tokio::time::sleep(std::time::Duration::from_millis(500)).await;
-
-                let result = StreamResult {
-                    action_type: StreamType::StreamResult,
-                    result: "Result 3".to_string()
-                };
-
-                match tx.send(result) {
-                    Ok(_) => {},
-                    Err(e) => {
-                        println!("err {:?}", e);
-                    }
-                };
-                tokio::time::sleep(std::time::Duration::from_millis(500)).await;
-
-                let result = StreamResult {
-                    action_type: StreamType::StreamEnd,
-                    result: "StreamEnd".to_string()
-                };
-
-                match tx.send(result) {
-                    Ok(_) => {},
-                    Err(e) => {
-                        println!("err {:?}", e);
-                    }
-                };
-        }
+            }
         }
     });
 }

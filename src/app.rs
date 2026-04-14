@@ -98,9 +98,6 @@ impl App {
     }
 
     fn submit_message(&mut self) {
-        self.input.clear();
-        self.reset_cursor();
-
         let start_req = StartRequest {
             prompt: self.input.clone(),
         };
@@ -109,6 +106,8 @@ impl App {
             Err(e) => println!("Println {:?}", e),
         }
 
+        self.input.clear();
+        self.reset_cursor();
         self.input_mode = InputMode::Processing
     }
 
@@ -158,6 +157,7 @@ impl App {
                     match stream.action_type {
                         StreamType::StreamResult => {
                             self.input_mode = InputMode::Processing;
+                            println!("Received {0}", stream.result);
                             self.enter_string(stream.result);
                         }
                         StreamType::StreamEnd => return Some(self.input),
