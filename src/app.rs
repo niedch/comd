@@ -1,9 +1,9 @@
+use crossterm::event::{EventStream, KeyCode, KeyEventKind, KeyModifiers};
+use futures::stream::StreamExt;
 use ratatui::layout::{Constraint, Layout, Position};
 use ratatui::style::{Color, Style};
 use ratatui::text::{Line, Span};
 use ratatui::widgets::{Block, BorderType, Borders, Paragraph};
-use crossterm::event::{EventStream, KeyCode, KeyEventKind, KeyModifiers};
-use futures::stream::StreamExt;
 use ratatui::{DefaultTerminal, Frame};
 use tokio::sync::mpsc::{UnboundedReceiver, UnboundedSender};
 
@@ -39,8 +39,8 @@ impl App {
             input_mode: InputMode::Editing,
             _result: String::new(),
             character_index: 0,
-            start_tx: start_tx,
-            result_rx: result_rx,
+            start_tx,
+            result_rx,
         }
     }
 

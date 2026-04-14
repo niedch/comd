@@ -11,4 +11,7 @@ ratatui = "0.30.0"
 ratatui-cheese = "0.6.0"
 tokio = {version = "1.51.1", features = ["full"]}
 futures = "0.3"
+config = "0.15.22"
+serde = {version = "1.0.228", features = ["derive"]}
+rig-core = "0.35.0"
 

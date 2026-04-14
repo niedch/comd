@@ -1,0 +1,6 @@
+[global]
+system_prompt = """
+test
+testing 2
+"""
+gemini_api_key = ""

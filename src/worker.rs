@@ -1,10 +1,7 @@
+use crate::{actions::{StartRequest, StreamResult, StreamType}, config::Settings};
 use tokio::sync::mpsc::{UnboundedReceiver, UnboundedSender};
-use crate::actions::{StartRequest, StreamResult, StreamType};
 
-pub fn spawn_worker(
-    tx: UnboundedSender<StreamResult>,
-    mut rx: UnboundedReceiver<StartRequest>,
-) {
+pub fn spawn_worker(settings: &Settings, tx: UnboundedSender<StreamResult>, mut rx: UnboundedReceiver<StartRequest>) {
     tokio::spawn(async move {
         tokio::select! {
         Some(_action) = rx.recv() => {

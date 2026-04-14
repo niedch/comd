@@ -12,5 +12,5 @@ pub struct StreamResult {
 
 #[derive(Debug)]
 pub struct StartRequest {
-    pub prompt: String
+    pub prompt: String,
 }
