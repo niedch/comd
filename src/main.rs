@@ -22,9 +22,9 @@ async fn main() -> Result<()> {
     //     viewport: ratatui::Viewport::Inline(6),
     // });
 
-    // let config = config::load_config()?;
-
-    let client = gemini::Client::from_env();
+    let config = config::load_config()?;
+    
+    let client = gemini::Client::new(&config.global.gemini_api_key)?;
     let agent = client.agent("gemini-2.5-flash").preamble("You are a comedian").build();
     let mut response_stream = agent.stream_prompt("Write me a joke").await;
 
@@ -33,7 +33,7 @@ async fn main() -> Result<()> {
             Ok(MultiTurnStreamItem::StreamAssistantItem(
                 StreamedAssistantContent::Text(result),
             )) => {
-                print!("|{}|", result);
+                print!("|{result}|");
             }
             Ok(_) => {}
             Err(e) => {
