@@ -17,8 +17,7 @@ pub fn spawn_worker(
     mut rx: UnboundedReceiver<StartRequest>,
 ) {
     tokio::spawn(async move {
-        tokio::select! {
-            Some(action) = rx.recv() => {
+        while let Some(action) = rx.recv().await {
                 let client = gemini::Client::new(&settings.global.gemini_api_key).unwrap();
                 let agent = client.agent("gemini-2.5-flash")
                     .preamble(&settings.global.system_prompt)
@@ -48,7 +47,6 @@ pub fn spawn_worker(
                     };
                 }
 
-            }
         }
     });
 }

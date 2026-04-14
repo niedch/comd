@@ -36,7 +36,7 @@ async fn main() -> Result<()> {
     return match result {
         None => Ok(()),
         Some(out) => {
-            println!("\n\nOutput {:?}", out);
+            println!("\n\n{:?}", out);
             Ok(())
         }
     };

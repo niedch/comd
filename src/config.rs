@@ -15,10 +15,6 @@ pub struct Global {
 }
 
 pub fn load_config() -> Result<Settings> {
-    let path = std::env::current_dir();
-
-    println!("Current Path {:?}", path);
-
     let mut builder = Config::builder()
         .add_source(config::File::with_name("./config/config"))
         .add_source(config::Environment::with_prefix("").separator("_"));

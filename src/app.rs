@@ -157,7 +157,6 @@ impl App {
                     match stream.action_type {
                         StreamType::StreamResult => {
                             self.input_mode = InputMode::Processing;
-                            println!("Received {0}", stream.result);
                             self.enter_string(stream.result);
                         }
                         StreamType::StreamEnd => return Some(self.input),
