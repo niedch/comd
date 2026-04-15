@@ -1,6 +1,14 @@
 #!/usr/bin/env zsh
 # Run comd from a ZLE key binding (default: Ctrl+E).
-__comd_into_prompt() {
+#
+# The line shows `comd` (not an internal helper name). A shell function `comd` runs the real binary
+# via `command`, sets COMD_ZSH_BUFFER_FILE, then inserts the result with print -z.
+#
+# Optional:
+#   export COMD_CMD='comd'     # binary or full command line (zsh-split)
+#   export COMD_ARGS='--foo'   # extra args (zsh-split)
+
+comd() {
   emulate -L zsh
   setopt localoptions pipefail no_aliases 2>/dev/null
 
@@ -37,15 +45,8 @@ comd-widget() {
     return 1
   fi
 
-  local bin=${COMD_CMD:-comd}
-  local cmdword="${bin%% *}"
-  if [[ ! -x ${cmdword} ]] && ! command -v -- "$cmdword" &>/dev/null; then
-    print -u2 "comd-widget: command not found: $cmdword (set COMD_CMD?)"
-    return 1
-  fi
-
   zle .push-line
-  BUFFER=__comd_into_prompt
+  BUFFER=comd
   zle .accept-line
 }
 
