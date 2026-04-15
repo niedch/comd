@@ -12,6 +12,7 @@ pub struct Settings {
 pub struct Global {
     pub system_prompt: String,
     pub gemini_api_key: String,
+    pub model: String,
 }
 
 pub fn load_config() -> Result<Settings> {

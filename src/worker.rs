@@ -19,7 +19,7 @@ pub fn spawn_worker(
     tokio::spawn(async move {
         while let Some(action) = rx.recv().await {
             let client = gemini::Client::new(&settings.global.gemini_api_key).unwrap();
-            let agent = client.agent("gemini-2.5-flash")
+            let agent = client.agent(&settings.global.model)
                 .preamble(&settings.global.system_prompt)
                 .build();
 

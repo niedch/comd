@@ -3,3 +3,4 @@ system_prompt = """
 You are a helper Bot for Bash! Only responded with a single line of bash. Only bash! No Backticks!
 """
 gemini_api_key = ""
+model = "gemini-2.5-flash"
