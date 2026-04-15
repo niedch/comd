@@ -22,8 +22,6 @@ pub struct App {
     character_index: usize,
     /// Current input mode
     input_mode: InputMode,
-    /// History of recorded messages
-    _result: String,
 
     start_tx: UnboundedSender<StartRequest>,
     result_rx: UnboundedReceiver<StreamResult>,
@@ -37,7 +35,6 @@ impl App {
         Self {
             input: String::new(),
             input_mode: InputMode::Editing,
-            _result: String::new(),
             character_index: 0,
             start_tx,
             result_rx,
