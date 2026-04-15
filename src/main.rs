@@ -1,5 +1,6 @@
 use color_eyre::Result;
 use ratatui::TerminalOptions;
+use std::fs;
 use tokio::sync::mpsc::{self};
 
 use crate::{
@@ -33,11 +34,27 @@ async fn main() -> Result<()> {
 
     ratatui::restore();
 
-    return match result {
-        None => Ok(()),
+    let zsh_buf = std::env::var_os("COMD_ZSH_BUFFER_FILE");
+
+    match &result {
+        None => {}
         Some(out) => {
-            println!("\n\n{:?}", out);
-            Ok(())
+            if zsh_buf.is_none() {
+                println!("\n\n{out:?}");
+            }
         }
-    };
+    }
+
+    if let Some(path) = zsh_buf {
+        match &result {
+            None => {
+                let _ = fs::write(path, "");
+            }
+            Some(s) => {
+                let _ = fs::write(path, s);
+            }
+        }
+    }
+
+    Ok(())
 }

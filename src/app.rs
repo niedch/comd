@@ -124,9 +124,9 @@ impl App {
     }
 
     pub async fn run(mut self, terminal: &mut DefaultTerminal) -> Option<String> {
+        let mut event_stream = EventStream::new();
         loop {
             terminal.draw(|f| self.render(f)).ok();
-            let mut event_stream = EventStream::new();
 
             tokio::select! {
                     event = event_stream.next() => {
