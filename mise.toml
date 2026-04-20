@@ -1,0 +1,11 @@
+[tools]
+rust = "1.95.0"
+
+[tasks.dev]
+run = "cargo run ."
+description = "Runs Comd"
+
+[tasks.test]
+run = "cargo test"
+description = "Runs Comd Tests"
+
