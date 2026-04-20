@@ -38,11 +38,10 @@ async fn main() -> Result<()> {
 
     match &result {
         None => {}
-        Some(out) => {
-            if zsh_buf.is_none() {
-                println!("\n\n{out:?}");
-            }
+        Some(out) if zsh_buf.is_none() => {
+            println!("\n\n{out:?}");
         }
+        Some(_out) => {}
     }
 
     if let Some(path) = zsh_buf {
