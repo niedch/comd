@@ -6,6 +6,7 @@ run = "cargo run ."
 description = "Runs Comd"
 
 [tasks.test]
+sources = ["src/**/*.rs"]
 run = "cargo test"
 description = "Runs Comd Tests"
 
