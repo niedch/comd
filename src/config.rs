@@ -1,3 +1,5 @@
+use std::path::PathBuf;
+
 use color_eyre::Result;
 use config::Config;
 
@@ -16,8 +18,19 @@ pub struct Global {
 }
 
 pub fn load_config() -> Result<Settings> {
+    let xdg_dir = std::env::var("XDG_CONFIG_HOME")
+        .map(PathBuf::from)
+        .unwrap_or_else(|_| {
+            let home = std::env::var("HOME").unwrap_or_else(|_| String::from("."));
+            [&home, ".config", "comd", "config.toml"]
+                .iter()
+                .collect()
+        });
+
     let mut builder = Config::builder()
-        .add_source(config::File::with_name("./config/config"))
+        .add_source(config::File::from(xdg_dir).required(true))
+        .add_source(config::File::with_name("./config/config.toml").required(false))
+        // .add_source(config::File::with_name("./config/config").required(false))
         .add_source(config::Environment::with_prefix("").separator("_"));
 
     // Explicitly map specific environment variables to their nested config paths
@@ -27,5 +40,6 @@ pub fn load_config() -> Result<Settings> {
 
     let settings = builder.build().unwrap();
     let settings_struct: Settings = settings.try_deserialize()?;
+    dbg!(&settings_struct);
     Ok(settings_struct)
 }
