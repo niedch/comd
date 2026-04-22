@@ -19,6 +19,11 @@ jobs:
       with:
         fetch-depth: 0
     - uses: mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29 # v2.2.1    
+    - name: Download macOS SDK
+      run: |
+        curl -L https://github.com/joseluisq/macosx-sdks/releases/download/13.3/MacOSX13.3.sdk.tar.xz -o sdk.tar.xz
+        tar -xf sdk.tar.xz
+        echo "SDKROOT=$PWD/MacOSX13.3.sdk" >> $GITHUB_ENV
     - uses: goreleaser/goreleaser-action@v7
       if: success() && startsWith(github.ref, 'refs/tags/')
       with:
