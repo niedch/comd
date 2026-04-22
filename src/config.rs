@@ -40,6 +40,5 @@ pub fn load_config() -> Result<Settings> {
 
     let settings = builder.build().unwrap();
     let settings_struct: Settings = settings.try_deserialize()?;
-    dbg!(&settings_struct);
     Ok(settings_struct)
 }
