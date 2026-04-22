@@ -14,8 +14,15 @@ mod app;
 mod config;
 mod worker;
 
+const COMD_WIDGET_ZSH: &str = include_str!("../scripts/comd-widget.zsh");
+
 #[tokio::main]
 async fn main() -> Result<()> {
+    if std::env::args().any(|arg| arg == "--script") {
+        print!("{COMD_WIDGET_ZSH}");
+        return Ok(());
+    }
+
     rustls::crypto::ring::default_provider().install_default().ok();
     color_eyre::install()?;
     let mut inline_terminal = ratatui::init_with_options(TerminalOptions {
