@@ -10,7 +10,6 @@ before:
 
 builds:
   - builder: rust
-    tool: cross
     flags:
       - --release
     targets:
