@@ -16,6 +16,7 @@ mod worker;
 
 #[tokio::main]
 async fn main() -> Result<()> {
+    rustls::crypto::ring::default_provider().install_default().ok();
     color_eyre::install()?;
     let mut inline_terminal = ratatui::init_with_options(TerminalOptions {
         viewport: ratatui::Viewport::Inline(6),
