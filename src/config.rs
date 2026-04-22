@@ -22,13 +22,13 @@ pub fn load_config() -> Result<Settings> {
         .map(PathBuf::from)
         .unwrap_or_else(|_| {
             let home = std::env::var("HOME").unwrap_or_else(|_| String::from("."));
-            [&home, ".config", "comd", "config.toml"]
-                .iter()
-                .collect()
+            [&home, ".config"].iter().collect()
         });
 
+    let xdg_comd_path = xdg_dir.join("comd").join("config.toml");
+
     let mut builder = Config::builder()
-        .add_source(config::File::from(xdg_dir).required(true))
+        .add_source(config::File::from(xdg_comd_path).required(true))
         .add_source(config::File::with_name("./config/config.toml").required(false))
         // .add_source(config::File::with_name("./config/config").required(false))
         .add_source(config::Environment::with_prefix("").separator("_"));
