@@ -41,6 +41,6 @@ comd-widget() {
 
 zle -N comd-widget
 # Replaces default emacs ^E (end-of-line); use another key if you rely on that.
-bindkey -M emacs '^h' comd-widget
-bindkey -M vicmd '^h' comd-widget
-bindkey -M viins '^h' comd-widget
+bindkey -M emacs '^j' comd-widget
+bindkey -M vicmd '^j' comd-widget
+bindkey -M viins '^j' comd-widget
