@@ -6,4 +6,5 @@ target/
 .zig-cache/
 *.sdk
 *.xz
+.direnv/
 
